@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+prefix=${PASSWORD_STORE_DIR-~/.password-store}
+cd "$prefix"
+URLS=$(ls | sed 's/\.gpg$//g' | grep "\.")
+
+mkdir -p ~/.cache/favicons/
+
+for url in $URLS
+do
+  if [[ ! -f "$HOME/.cache/favicons/$url.ico" ]]; then
+    echo "SCRAPING: $url"
+    curl -f -L --connect-timeout 5 "https://$url/favicon.ico" -o ~/.cache/favicons/$url.ico
+  fi
+done
